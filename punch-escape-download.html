@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Punch Escape: Monkey Adventure</title>
+<meta name="description" content="Punch Escape: Monkey Adventure'ı App Store veya Google Play'den indir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0B2E23;
+    --bg-card:#123D2F;
+    --vine:#2F6B4F;
+    --banana:#FFC94D;
+    --banana-soft:#FFE7A8;
+    --bandana:#E5503C;
+    --cream:#FBF3E3;
+    --muted:#BFE0CF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    background:var(--bg-deep);
+    color:var(--cream);
+    font-family:'Nunito Sans', sans-serif;
+    min-height:100vh;
+  }
+  body{
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(255,201,77,0.12), transparent 45%),
+      radial-gradient(circle at 85% 100%, rgba(47,107,79,0.35), transparent 50%);
+    display:flex;
+    justify-content:center;
+    padding:0 20px;
+  }
+  .page{
+    width:100%;
+    max-width:440px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 0 32px;
+    position:relative;
+  }
+
+  /* --- Language toggle --- */
+  .lang-toggle{
+    align-self:flex-end;
+    display:flex;
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:999px;
+    padding:4px;
+    gap:2px;
+    margin-bottom:20px;
+  }
+  .lang-toggle button{
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    font-family:'Nunito Sans', sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    padding:6px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .lang-toggle button.active{
+    background:var(--banana);
+    color:#16291F;
+  }
+
+  /* --- Signature: swinging vine + monkey --- */
+  .vine-rig{
+    width:100%;
+    height:58px;
+    position:relative;
+    margin-bottom:4px;
+  }
+  .vine-rope{
+    position:absolute;
+    top:0; left:50%;
+    width:2px;
+    height:34px;
+    background:linear-gradient(to bottom, var(--vine), transparent);
+    transform-origin:top center;
+    animation:swing 3.2s ease-in-out infinite;
+  }
+  .vine-rope .monkey{
+    position:absolute;
+    bottom:-22px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:28px;
+    line-height:1;
+  }
+  @keyframes swing{
+    0%,100%{ transform:rotate(-9deg); }
+    50%{ transform:rotate(9deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .vine-rope{ animation:none; transform:rotate(0deg); }
+  }
+
+  .icon-medallion{
+    width:96px;
+    height:96px;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 18px 32px -12px rgba(0,0,0,0.55), 0 0 0 6px rgba(255,201,77,0.14);
+    margin-bottom:22px;
+  }
+  .icon-medallion img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .eyebrow{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--banana);
+    margin-bottom:10px;
+    text-align:center;
+  }
+  h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:34px;
+    line-height:1.12;
+    text-align:center;
+    color:var(--cream);
+    margin-bottom:14px;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-size:16px;
+    line-height:1.5;
+    text-align:center;
+    color:var(--muted);
+    max-width:340px;
+    margin-bottom:32px;
+  }
+
+  .store-stack{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .store-btn{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding:14px;
+    border-radius:18px;
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,0.07);
+    transition:transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .store-btn:active{ transform:scale(0.98); }
+  .store-btn img{
+    height:42px;
+    display:block;
+  }
+  .badge-fallback{
+    display:none;
+    font-weight:800;
+    font-size:15px;
+    color:var(--cream);
+  }
+  .badge-fallback .small{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .store-btn.recommended{
+    background:linear-gradient(135deg, rgba(255,201,77,0.16), rgba(255,201,77,0.05));
+    border-color:rgba(255,201,77,0.45);
+    box-shadow:0 10px 28px -10px rgba(255,201,77,0.35);
+  }
+  .store-btn .tag{
+    position:absolute;
+    top:-10px;
+    right:16px;
+    background:var(--bandana);
+    color:var(--cream);
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+    display:none;
+  }
+  .store-btn.recommended .tag{ display:inline-block; }
+
+  .divider{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:28px 0 22px;
+    color:var(--vine);
+    font-size:12px;
+    text-transform:lowercase;
+  }
+  .divider::before, .divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:rgba(255,255,255,0.08);
+  }
+
+  footer{
+    margin-top:auto;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--muted);
+    opacity:0.75;
+    padding-top:24px;
+  }
+  footer a{ color:var(--banana-soft); text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" id="lang-tr" class="active" onclick="setLang('tr')">TR</button>
+      <button type="button" id="lang-en" onclick="setLang('en')">EN</button>
+    </div>
+
+    <div class="vine-rig">
+      <div class="vine-rope"><span class="monkey">🐒</span></div>
+    </div>
+
+    <div class="icon-medallion"><img src="logo.png" alt="Punch Escape: Monkey Adventure"></div>
+
+    <p class="eyebrow">Punch Escape: Monkey Adventure</p>
+    <h1 id="headline">Muzları Topla,<br>Kaç Kurtul!</h1>
+    <p class="sub" id="subhead">Bir arkadaşın az önce skorunu paylaştı.<br>Sıra sende — indir ve geç onu.</p>
+
+    <div class="store-stack" id="store-stack">
+      <a class="store-btn" id="btn-ios" href="https://apps.apple.com/tr/app/punch-escape-monkey-adventure/id6772160701?l=tr">
+        <span class="tag" id="tag-ios">Senin İçin</span>
+        <img id="badge-ios" src="app-store-badge-tr.svg" alt="App Store'dan İndir" onerror="this.style.display='none'; document.getElementById('fallback-ios').style.display='block';">
+        <span class="badge-fallback" id="fallback-ios"><span class="small">İNDİR</span>App Store</span>
+      </a>
+
+      <a class="store-btn" id="btn-android" href="https://play.google.com/store/apps/details?id=com.phantomlab.punchescape">
+        <span class="tag" id="tag-android">Senin İçin</span>
+        <img id="badge-android" src="google-play-badge-tr.png" alt="Google Play'den İndir" onerror="this.style.display='none'; document.getElementById('fallback-android').style.display='block';">
+        <span class="badge-fallback" id="fallback-android"><span class="small">İNDİR</span>Google Play</span>
+      </a>
+    </div>
+
+    <div class="divider" id="divider-word">ya da</div>
+
+    <footer>
+      Phantom Game Lab · <a href="privacy-policy.html" id="footer-privacy">Gizlilik Politikası</a>
+    </footer>
+  </div>
+
+<script>
+  var STRINGS = {
+    tr: {
+      htmlLang: 'tr',
+      headline: 'Muzları Topla,<br>Kaç Kurtul!',
+      sub: 'Bir arkadaşın az önce skorunu paylaştı.<br>Sıra sende — indir ve geç onu.',
+      tag: 'Senin İçin',
+      orWord: 'ya da',
+      footerPrivacy: 'Gizlilik Politikası',
+      appleBadge: 'app-store-badge-tr.svg',
+      googleBadge: 'google-play-badge-tr.png',
+      appleAlt: "App Store'dan İndir",
+      googleAlt: "Google Play'den İndir"
+    },
+    en: {
+      htmlLang: 'en',
+      headline: 'Grab the Bananas,<br>Make Your Escape!',
+      sub: 'A friend just shared their score.<br>Your turn — download and beat it.',
+      tag: 'For You',
+      orWord: 'or',
+      footerPrivacy: 'Privacy Policy',
+      appleBadge: 'app-store-badge-en.svg',
+      googleBadge: 'google-play-badge-en.png',
+      appleAlt: 'Download on the App Store',
+      googleAlt: 'Get it on Google Play'
+    }
+  };
+
+  function setLang(lang){
+    var s = STRINGS[lang];
+    document.getElementById('html-root').lang = s.htmlLang;
+    document.getElementById('headline').innerHTML = s.headline;
+    document.getElementById('subhead').innerHTML = s.sub;
+    document.getElementById('tag-ios').textContent = s.tag;
+    document.getElementById('tag-android').textContent = s.tag;
+    document.getElementById('divider-word').textContent = s.orWord;
+    document.getElementById('footer-privacy').textContent = s.footerPrivacy;
+
+    var badgeIos = document.getElementById('badge-ios');
+    var badgeAndroid = document.getElementById('badge-android');
+    var fallbackIos = document.getElementById('fallback-ios');
+    var fallbackAndroid = document.getElementById('fallback-android');
+
+    badgeIos.style.display = '';
+    badgeAndroid.style.display = '';
+    fallbackIos.style.display = 'none';
+    fallbackAndroid.style.display = 'none';
+    fallbackIos.querySelector('.small').textContent = lang === 'tr' ? 'İNDİR' : 'DOWNLOAD';
+    fallbackAndroid.querySelector('.small').textContent = lang === 'tr' ? 'İNDİR' : 'DOWNLOAD';
+
+    badgeIos.src = s.appleBadge;
+    badgeIos.alt = s.appleAlt;
+    badgeAndroid.src = s.googleBadge;
+    badgeAndroid.alt = s.googleAlt;
+
+    document.getElementById('lang-tr').classList.toggle('active', lang === 'tr');
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  }
+
+  (function(){
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var iosBtn = document.getElementById('btn-ios');
+    var androidBtn = document.getElementById('btn-android');
+    var stack = document.getElementById('store-stack');
+
+    if (isIOS) {
+      iosBtn.classList.add('recommended');
+    } else if (isAndroid) {
+      androidBtn.classList.add('recommended');
+      stack.insertBefore(androidBtn, iosBtn);
+    }
+
+    var browserLang = (navigator.language || 'tr').toLowerCase();
+    setLang(browserLang.indexOf('tr') === 0 ? 'tr' : (browserLang.indexOf('en') === 0 ? 'en' : 'tr'));
+  })();
+</script>
+</body>
+</html>
